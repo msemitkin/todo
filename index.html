@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
+    <!--    <link rel="stylesheet" href="style.css">-->
+    <!--    <script src="index.js"></script>-->
+    <meta charset="UTF-8">
+    <title>ToDo</title>
+</head>
+<body>
+
+
+<h1>TodoList</h1>
+<input type='text' id='name' placeholder='New Task'>
+<a href='#' id='add-btn'>Add Task</a>
+<ul id='list'>
+</ul>
+
+<style>
+    h1 {
+        font-size: 1.5em;
+    }
+
+    ul {
+        padding: 10px;
+    }
+
+    .done {
+        text-decoration: line-through;
+    }
+</style>
+<script>
+    function prependTaskToList(val) {
+        $('#list').prepend(`<li>${val}  <a href='#' class='done-btn'>Done</a> <a href='#' class='cancel-btn'>Cancel Task</a></li>`);
+    }
+
+    if (localStorage['tasks']) {
+        tasks = JSON.parse(localStorage['tasks']);
+    } else {
+        tasks = [];
+    }
+
+    for (let i = 0; i < tasks.length; i++) {
+        prependTaskToList(tasks[i]);
+    }
+
+    function addTask() {
+        let val = $('#name').val();
+        tasks.push(val);
+        localStorage["tasks"] = JSON.stringify(tasks);
+        prependTaskToList(val);
+        $('#name').val("").focus();
+    }
+
+    $('#add-btn').click(addTask);
+
+    $('#name').keyup(function (e) {
+        const enterKeyCode = 13;
+        if (e.keyCode === enterKeyCode) {
+            addTask();
+        }
+    });
+
+    $('.done-btn').live('click', function () {
+        $(this).parent('li').addClass('done');
+    });
+
+    $('.cancel-btn').live('click', function () {
+        $(this).parent('li').fadeOut();
+    });
+</script>
+</body>
+</html>
