@@ -33,7 +33,22 @@
 </style>
 <script>
     function prependTaskToList(task) {
-        $('#list').prepend(`
+        if (task.done == true) {
+            $('#list').prepend(`
+                    <li class="list-group-item done">
+                        <div class="task">
+                            <a href='#' class='done-btn'>Done</a>
+                            <a href="#">|</a>
+                            <a href='#' class='cancel-btn'>Delete</a>
+                            <a href="#">|</a>
+                            ${task.value}
+                            <input type="hidden" class="id" value='${task.id}'>
+                            <input type="hidden" class="done" value='${task.done}'>
+                        </div>
+                    </li>
+        `);
+        } else {
+            $('#list').prepend(`
                     <li class="list-group-item">
                         <div class="task">
                             <a href='#' class='done-btn'>Done</a>
@@ -42,9 +57,11 @@
                             <a href="#">|</a>
                             ${task.value}
                             <input type="hidden" class="id" value='${task.id}'>
+                            <input type="hidden" class="done" value='${task.done}'>
                         </div>
                     </li>
         `);
+        }
     }
 
     if (localStorage['tasks']) {
@@ -68,11 +85,11 @@
 
     function addTask() {
         let input = $('#name').val().trim();
-        console.log(input.length);
-        if (input  !== "") {
+        if (input !== "") {
             let task = {
                 id: getNewTaskId(),
-                value: input
+                value: input,
+                done: false
             };
             tasks.push(task);
             localStorage["tasks"] = JSON.stringify(tasks);
@@ -91,12 +108,18 @@
     });
 
     $('.done-btn').live('click', function () {
+        let taskId = $(this).siblings('.id').val();
+        tasks.forEach(task => {
+            if (task.id == taskId) {
+                task.done = true;
+            }
+        });
+        localStorage["tasks"] = JSON.stringify(tasks);
         $(this).closest('li').addClass('done');
     });
 
     $('.cancel-btn').live('click', function () {
         let taskId = $(this).siblings('.id').val();
-        console.log(taskId);
         tasks = tasks.filter(task => task.id != taskId);
         localStorage["tasks"] = JSON.stringify(tasks);
         $(this).closest('li').fadeOut();
