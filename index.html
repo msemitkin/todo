@@ -33,9 +33,8 @@
 </style>
 <script>
     function prependTaskToList(task) {
-        if (task.done == true) {
-            $('#list').prepend(`
-                    <li class="list-group-item done">
+        $('#list').prepend(`
+                    <li class="list-group-item ${task.done == true ? 'done' : ''}">
                         <div class="task">
                             <a href='#' class='done-btn'>Done</a>
                             <a href="#">|</a>
@@ -47,21 +46,6 @@
                         </div>
                     </li>
         `);
-        } else {
-            $('#list').prepend(`
-                    <li class="list-group-item">
-                        <div class="task">
-                            <a href='#' class='done-btn'>Done</a>
-                            <a href="#">|</a>
-                            <a href='#' class='cancel-btn'>Delete</a>
-                            <a href="#">|</a>
-                            ${task.value}
-                            <input type="hidden" class="id" value='${task.id}'>
-                            <input type="hidden" class="done" value='${task.done}'>
-                        </div>
-                    </li>
-        `);
-        }
     }
 
     if (localStorage['tasks']) {
