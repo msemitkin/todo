@@ -24,6 +24,7 @@
 
     ul {
         padding: 10px;
+        list-style-type: none;
     }
 
     .done {
@@ -32,7 +33,18 @@
 </style>
 <script>
     function prependTaskToList(task) {
-        $('#list').prepend(`<div class="task"><a href='#' class='done-btn'>Done</a> <a href="#">|</a> <a href='#' class='cancel-btn'>Delete</a> <a href="#">|</a> ${task.value}<input type="hidden" class="id" value='${task.id}'></div>`);
+        $('#list').prepend(`
+                    <li class="list-group-item">
+                        <div class="task">
+                            <a href='#' class='done-btn'>Done</a>
+                            <a href="#">|</a>
+                            <a href='#' class='cancel-btn'>Delete</a>
+                            <a href="#">|</a>
+                            ${task.value}
+                            <input type="hidden" class="id" value='${task.id}'>
+                        </div>
+                    </li>
+        `);
     }
 
     if (localStorage['tasks']) {
@@ -76,11 +88,11 @@
     });
 
     $('.done-btn').live('click', function () {
-        $(this).parent('li').addClass('done');
+        $(this).closest('li').addClass('done');
     });
 
     $('.cancel-btn').live('click', function () {
-        $(this).parent('li').fadeOut();
+        $(this).closest('li').fadeOut();
     });
 </script>
 </body>
