@@ -92,6 +92,10 @@
     });
 
     $('.cancel-btn').live('click', function () {
+        let taskId = $(this).siblings('.id').val();
+        console.log(taskId);
+        tasks = tasks.filter(task => task.id != taskId);
+        localStorage["tasks"] = JSON.stringify(tasks);
         $(this).closest('li').fadeOut();
     });
 </script>
