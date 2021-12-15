@@ -38,8 +38,19 @@
         let tasks;
         if (localStorage['tasks']) {
             tasks = JSON.parse(localStorage['tasks']);
+            tasks.sort(compare);
         } else {
             tasks = [];
+        }
+
+        function compare(task1, task2) {
+            if (task1.position < task2.position) {
+                return 1;
+            }
+            if (task1.position > task2.position) {
+                return -1;
+            }
+            return 0;
         }
 
         for (let i = 0; i < tasks.length; i++) {
@@ -83,6 +94,21 @@
 
 
         function updateTaskOrder() {
+            let taskOrderMap = new Map();
+            let position = 0;
+            $('.list-group').children('.list-group-item').each(function () {
+                let taskId = $(this).children('.task').children('.id').val();
+                taskOrderMap.set(taskId, position);
+                position++;
+            });
+            taskOrderMap.forEach((taskPosition, taskId) => {
+                tasks.forEach(task => {
+                    if (task.id == taskId) {
+                        task.position = taskPosition;
+                    }
+                });
+            });
+            flushTasksToLocalStorage();
         }
 
         function getNewTaskId() {
