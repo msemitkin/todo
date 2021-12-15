@@ -97,16 +97,12 @@
             let taskOrderMap = new Map();
             let position = 0;
             $('.list-group').children('.list-group-item').each(function () {
-                let taskId = $(this).children('.task').children('.id').val();
+                let taskId = Number($(this).children('.task').children('.id').val());
                 taskOrderMap.set(taskId, position);
                 position++;
             });
-            taskOrderMap.forEach((taskPosition, taskId) => {
-                tasks.forEach(task => {
-                    if (task.id == taskId) {
-                        task.position = taskPosition;
-                    }
-                });
+            tasks.forEach(task => {
+                task.position = taskOrderMap.get(task.id);
             });
             flushTasksToLocalStorage();
         }
@@ -135,7 +131,8 @@
                 let task = {
                     id: getNewTaskId(),
                     value: input,
-                    done: false
+                    done: false,
+                    position: 0
                 };
                 saveTask(task)
                 prependTaskToList(task);
