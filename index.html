@@ -67,6 +67,15 @@
         }
     }
 
+    function saveTask(task) {
+        tasks.push(task);
+        flushTasksToLocalStorage();
+    }
+
+    function flushTasksToLocalStorage() {
+        localStorage["tasks"] = JSON.stringify(tasks);
+    }
+
     function addTask() {
         let input = $('#name').val().trim();
         if (input !== "") {
@@ -75,8 +84,7 @@
                 value: input,
                 done: false
             };
-            tasks.push(task);
-            localStorage["tasks"] = JSON.stringify(tasks);
+            saveTask(task)
             prependTaskToList(task);
             $('#name').val("").focus();
         }
@@ -98,14 +106,14 @@
                 task.done = true;
             }
         });
-        localStorage["tasks"] = JSON.stringify(tasks);
+        flushTasksToLocalStorage();
         $(this).closest('li').addClass('done');
     });
 
     $('.cancel-btn').live('click', function () {
         let taskId = $(this).siblings('.id').val();
         tasks = tasks.filter(task => task.id != taskId);
-        localStorage["tasks"] = JSON.stringify(tasks);
+        flushTasksToLocalStorage()
         $(this).closest('li').fadeOut();
     });
 </script>
